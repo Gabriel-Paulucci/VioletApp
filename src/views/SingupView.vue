@@ -2,6 +2,7 @@
   <FormCenter>
     <FormContainer @submit.prevent="register">
       <h1 class="text-teal-800">Register</h1>
+      <h2 v-if="error" class="text-red-700">{{ error }}</h2>
       <FormInput
         placeholder="Username"
         type="text"
@@ -36,6 +37,7 @@ import FormInput from "@/components/form/FormInput.vue";
 import { object, string, ref as yupRef, ValidationError } from "yup";
 import config from "@/config";
 import FormButton from "@/components/form/FormButton.vue";
+import { useRouter } from "vue-router";
 
 interface FormErrorKeyType {
   [key: string]: boolean;
@@ -50,6 +52,8 @@ interface FormError extends FormErrorKeyType {
 const username = ref("");
 const password = ref("");
 const repeatPassword = ref("");
+
+const error = ref("");
 
 const form = reactive({
   username,
@@ -88,10 +92,16 @@ async function register() {
     });
 
     switch (response.status) {
-      case 422: // Unprocessable Entity
-      case 409: // Conflict
-      case 500: // Internal Server Error
-      case 200: // OK
+      case 409: {
+        error.value = "Username already exists";
+        formError.username = true;
+        break;
+      }
+      case 200: {
+        const router = useRouter();
+        router.push("/");
+        break;
+      }
       default:
         console.log(response);
         break;
