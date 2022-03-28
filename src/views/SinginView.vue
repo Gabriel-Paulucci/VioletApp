@@ -1,7 +1,6 @@
 <template>
   <FormCenter>
-    <FormContainer @submit.prevent="login">
-      <h1 class="text-teal-800">Login</h1>
+    <FormContainer @submit.prevent="login" title="Login">
       <FormInput
         placeholder="Username"
         type="text"

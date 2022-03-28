@@ -1,7 +1,6 @@
 <template>
   <FormCenter>
-    <FormContainer @submit.prevent="register">
-      <h1 class="text-teal-800">Register</h1>
+    <FormContainer @submit.prevent="register" title="Register">
       <h2 v-if="error" class="text-red-700">{{ error }}</h2>
       <FormInput
         placeholder="Username"
