@@ -1,18 +1,25 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <form @submit.prevent="login">
+      <input type="password" name="email" placeholder="Email" v-model="email" />
+      <input
+        type="email"
+        name="password"
+        placeholder="Password"
+        v-model="password"
+      />
+      <button type="submit">Login</button>
+    </form>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+<script setup lang="ts">
+import { ref } from "vue";
 
-export default defineComponent({
-  name: "HomeView",
-  components: {
-    HelloWorld,
-  },
-});
+const password = ref("");
+const email = ref("");
+
+function login() {
+  console.log(email.value, password.value);
+}
 </script>
