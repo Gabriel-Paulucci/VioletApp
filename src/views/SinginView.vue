@@ -1,9 +1,6 @@
 <template>
-  <div class="w-full h-full flex justify-center items-center bg-teal-50">
-    <form
-      class="flex flex-col items-center bg-emerald-400 rounded p-4"
-      @submit.prevent="login"
-    >
+  <FormCenter>
+    <FormContainer @submit.prevent="login">
       <h1 class="text-teal-800">Login</h1>
       <FormInput
         placeholder="Username"
@@ -18,16 +15,13 @@
         :error="formError.password"
       />
       <div>
-        <router-link class="px-2 py-1" to="/register">Sing up</router-link>
-        <button
-          class="rounded px-2 py-1 my-2 bg-emerald-700 text-white w-fit mx-auto"
-          type="submit"
+        <router-link class="px-2 py-1 text-teal-800" to="/singup"
+          >Sing up</router-link
         >
-          Sign in
-        </button>
+        <FormButton text="Login" />
       </div>
-    </form>
-  </div>
+    </FormContainer>
+  </FormCenter>
 </template>
 
 <script setup lang="ts">
@@ -35,6 +29,9 @@ import { reactive, ref } from "vue";
 import FormInput from "../components/form/FormInput.vue";
 import { object, string, ValidationError } from "yup";
 import config from "@/config";
+import FormCenter from "../components/form/FormCenter.vue";
+import FormContainer from "@/components/form/FormContainer.vue";
+import FormButton from "@/components/form/FormButton.vue";
 
 interface FormErrorKeyType {
   [key: string]: boolean;
@@ -83,10 +80,10 @@ async function login() {
         formError.username = true;
         formError.password = true;
         break;
-      case 500:
+      case 500: // Internal Server Error
         alert("Internal server error");
         break;
-      case 200:
+      case 200: // OK
         {
           interface Result {
             token: string;
@@ -94,6 +91,8 @@ async function login() {
 
           const data: Result = await result.json();
           localStorage.setItem("token", data.token);
+
+          console.log("Login success");
         }
         break;
       default:
@@ -106,8 +105,9 @@ async function login() {
           formError[path] = true;
         }
       });
+    } else {
+      console.log(error);
     }
-    console.log(error);
   }
 }
 </script>
