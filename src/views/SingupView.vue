@@ -75,6 +75,8 @@ const formValidator = object({
     .oneOf([yupRef("password"), null]),
 }).required();
 
+const router = useRouter();
+
 async function register() {
   try {
     await formValidator.validate(form, { abortEarly: false });
@@ -98,7 +100,6 @@ async function register() {
         break;
       }
       case 200: {
-        const router = useRouter();
         router.push("/");
         break;
       }

@@ -32,6 +32,7 @@ import config from "@/config";
 import FormCenter from "../components/form/FormCenter.vue";
 import FormContainer from "@/components/form/FormContainer.vue";
 import FormButton from "@/components/form/FormButton.vue";
+import { useRouter } from "vue-router";
 
 interface FormErrorKeyType {
   [key: string]: boolean;
@@ -59,6 +60,8 @@ const formValidator = object({
   username: string().required(),
   password: string().required(),
 }).required();
+
+const router = useRouter();
 
 async function login() {
   try {
@@ -92,7 +95,7 @@ async function login() {
           const data: Result = await result.json();
           localStorage.setItem("token", data.token);
 
-          console.log("Login success");
+          router.push("/dashboard");
         }
         break;
       default:
