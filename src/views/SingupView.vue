@@ -1,7 +1,6 @@
 <template>
   <FormCenter>
-    <FormContainer @submit.prevent="register" title="Register">
-      <h2 v-if="error" class="text-red-700">{{ error }}</h2>
+    <FormContainer @submit.prevent="register" title="Register" :error="error">
       <FormInput
         placeholder="Username"
         type="text"
@@ -39,20 +38,18 @@ import FormButton from "@/components/form/FormButton.vue";
 import { useRouter } from "vue-router";
 
 interface FormErrorKeyType {
-  [key: string]: boolean;
+  [key: string]: string;
 }
 
 interface FormError extends FormErrorKeyType {
-  username: boolean;
-  password: boolean;
-  repeatPassword: boolean;
+  username: string;
+  password: string;
+  repeatPassword: string;
 }
 
 const username = ref("");
 const password = ref("");
 const repeatPassword = ref("");
-
-const error = ref("");
 
 const form = reactive({
   username,
@@ -60,10 +57,12 @@ const form = reactive({
   repeatPassword,
 });
 
+const error = ref("");
+
 const formError = reactive<FormError>({
-  username: false,
-  password: false,
-  repeatPassword: false,
+  username: "",
+  password: "",
+  repeatPassword: "",
 });
 
 const formValidator = object({
@@ -77,6 +76,12 @@ const formValidator = object({
 const router = useRouter();
 
 async function register() {
+  error.value = "";
+
+  formError.password = "";
+  formError.repeatPassword = "";
+  formError.username = "";
+
   try {
     await formValidator.validate(form, { abortEarly: false });
 
@@ -95,7 +100,6 @@ async function register() {
     switch (response.status) {
       case 409: {
         error.value = "Username already exists";
-        formError.username = true;
         break;
       }
       case 200: {
@@ -108,9 +112,10 @@ async function register() {
     }
   } catch (error) {
     if (error instanceof ValidationError) {
-      error.inner.forEach(({ path }) => {
+      error.inner.forEach(({ path, message }) => {
         if (path) {
-          formError[path] = true;
+          console.log(message);
+          formError[path] = message;
         }
       });
     } else {

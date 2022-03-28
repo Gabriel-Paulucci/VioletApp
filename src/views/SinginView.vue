@@ -1,6 +1,6 @@
 <template>
   <FormCenter>
-    <FormContainer @submit.prevent="login" title="Login">
+    <FormContainer @submit.prevent="login" title="Login" :error="error">
       <FormInput
         placeholder="Username"
         type="text"
@@ -34,12 +34,12 @@ import FormButton from "@/components/form/FormButton.vue";
 import { useRouter } from "vue-router";
 
 interface FormErrorKeyType {
-  [key: string]: boolean;
+  [key: string]: string;
 }
 
 interface FormError extends FormErrorKeyType {
-  username: boolean;
-  password: boolean;
+  username: string;
+  password: string;
 }
 
 const username = ref("");
@@ -50,9 +50,11 @@ const form = reactive({
   password,
 });
 
+const error = ref("");
+
 const formError = reactive<FormError>({
-  username: false,
-  password: false,
+  username: "",
+  password: "",
 });
 
 const formValidator = object({
@@ -63,6 +65,11 @@ const formValidator = object({
 const router = useRouter();
 
 async function login() {
+  error.value = "";
+
+  formError.password = "";
+  formError.username = "";
+
   try {
     await formValidator.validate(form, { abortEarly: false });
 
@@ -79,8 +86,9 @@ async function login() {
 
     switch (result.status) {
       case 401: // Unauthorized
-        formError.username = true;
-        formError.password = true;
+        error.value = "Invalid username or password";
+        formError.username = "";
+        formError.password = "";
         break;
       case 500: // Internal Server Error
         alert("Internal server error");
@@ -102,9 +110,9 @@ async function login() {
     }
   } catch (error) {
     if (error instanceof ValidationError) {
-      error.inner.forEach(({ path }) => {
+      error.inner.forEach(({ path, message }) => {
         if (path) {
-          formError[path] = true;
+          formError[path] = message;
         }
       });
     } else {
