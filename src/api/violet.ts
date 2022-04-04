@@ -125,4 +125,29 @@ export class VioletApi {
       throw new Error("Failed to create app");
     }
   }
+
+  public async getApps() {
+    try {
+      const request = await fetch(`${this.baseUrl}/apps`, {
+        ...this.baseConfig,
+        method: "GET",
+      });
+
+      switch (request.status) {
+        case 200: {
+          const response: App[] = await request.json();
+          return response;
+        }
+        case 500: {
+          throw new Error("Internal server error");
+        }
+        default:
+          console.log(request.status);
+          throw new Error("Unknown error");
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to get apps");
+    }
+  }
 }

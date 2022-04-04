@@ -9,13 +9,16 @@
 <script setup lang="ts">
 import { inject } from "vue";
 import { VioletApi } from "./api/violet";
+import { useMainStore } from "./store/mainStore";
 
 const violetApi = inject<VioletApi>("violetApi");
+const store = useMainStore();
 
 if (violetApi) {
   const token = localStorage.getItem("token");
 
   if (token) {
+    store.token = token;
     violetApi.setToken(token);
   }
 }
