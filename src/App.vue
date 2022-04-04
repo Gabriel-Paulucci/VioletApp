@@ -6,7 +6,20 @@
   <router-view />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { inject } from "vue";
+import { VioletApi } from "./api/violet";
+
+const violetApi = inject<VioletApi>("violetApi");
+
+if (violetApi) {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    violetApi.setToken(token);
+  }
+}
+</script>
 
 <style>
 * {

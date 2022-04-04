@@ -1,9 +1,7 @@
-export interface Config {
+export class Config {
   apiUrl: string;
+
+  constructor() {
+    this.apiUrl = process.env.VUE_APP_API_URL ?? "http://localhost:5000";
+  }
 }
-
-const config: Config = {
-  apiUrl: process.env.VUE_APP_API_URL ?? "http://localhost:5000",
-};
-
-export default config;
