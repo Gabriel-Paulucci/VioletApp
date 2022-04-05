@@ -9,7 +9,7 @@
         <th class="w-[100px]">Actions</th>
       </thead>
       <tbody>
-        <tr class="border-b-[1px]" v-for="token in tokens" :key="token.appId">
+        <tr class="border-b-[1px]" v-for="token in tokens" :key="token.token">
           <td>{{ token.appId }}</td>
           <td>{{ token.subappName }}</td>
           <td>{{ token.token }}</td>
