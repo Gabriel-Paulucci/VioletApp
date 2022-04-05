@@ -23,12 +23,10 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "dashboard" */ "../views/DashboardView.vue"),
   },
   {
-    path: "/submodules/:id",
-    name: "submodules",
+    path: "/tokens/:id",
+    name: "tokens",
     component: () =>
-      import(
-        /* webpackChunkName: "submodules" */ "../views/SubmodulesView.vue"
-      ),
+      import(/* webpackChunkName: "tokens" */ "../views/TokensView.vue"),
   },
 ];
 

@@ -2,7 +2,7 @@
   <div class="group flex">
     <span class="grow"> {{ name }} </span>
     <div>
-      <router-link :to="`/submodules/${id}`">
+      <router-link :to="`/tokens/${id}`">
         <font-awesome-icon
           class="text-sm invisible group-hover:visible hover:text-cyan-500 cursor-pointer"
           :icon="['fa', 'gear']"
