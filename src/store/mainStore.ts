@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export interface MainStore {
   token: string;
-  apps: App[];
+  apps: App[] | null;
 }
 
 export interface App {
@@ -14,7 +14,7 @@ export interface App {
 export const useMainStore = defineStore("mainStore", {
   state: (): MainStore => ({
     token: "",
-    apps: [],
+    apps: null,
   }),
   getters: {
     getToken: (state: MainStore) => {

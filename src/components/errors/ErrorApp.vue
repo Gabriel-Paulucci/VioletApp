@@ -2,11 +2,13 @@
   <div class="group flex">
     <span class="grow"> {{ name }} </span>
     <div>
-      <font-awesome-icon
-        class="text-sm invisible group-hover:visible hover:text-cyan-500 cursor-pointer"
-        :icon="['fa', 'gear']"
-        @click="$emit('edit', id)"
-      />
+      <router-link :to="`/submodules/${id}`">
+        <font-awesome-icon
+          class="text-sm invisible group-hover:visible hover:text-cyan-500 cursor-pointer"
+          :icon="['fa', 'gear']"
+          @click="$emit('config', id)"
+        />
+      </router-link>
     </div>
   </div>
 </template>
@@ -15,8 +17,5 @@
 defineProps<{
   id: number;
   name: string;
-}>();
-defineEmits<{
-  (event: "edit", id: number): void;
 }>();
 </script>
