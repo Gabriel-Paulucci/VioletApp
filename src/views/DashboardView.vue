@@ -5,21 +5,23 @@
     </div>
     <div class="grow bg-teal-50">
       <DashboardContainer>
-        <slot></slot>
+        <ErrorToken :tokens="appTokens" />
       </DashboardContainer>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { App, VioletApi } from "@/api/violet";
+import { App, AppToken, VioletApi } from "@/api/violet";
 import DashboardMenu from "@/components/dashboard/DashboardMenu.vue";
 import DashboardContainer from "@/components/dashboard/DashboardContainer.vue";
 import { useMainStore } from "@/store/mainStore";
 import { inject, onMounted, ref } from "vue";
+import ErrorToken from "@/components/errors/ErrorToken.vue";
 
 const violetApi = inject<VioletApi>("violetApi");
 const apps = ref<App[]>([]);
+const appTokens = ref<AppToken[]>([]);
 const store = useMainStore();
 
 async function edit(id: number) {
@@ -28,8 +30,8 @@ async function edit(id: number) {
     return;
   }
   try {
-    const appTokens = await violetApi.getAppTokens(id);
-    console.log(appTokens);
+    console.log(id);
+    appTokens.value = await violetApi.getAppTokens(id);
   } catch (error) {
     console.log(error);
   }

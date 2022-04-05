@@ -7,7 +7,12 @@ import "@/config";
 import { VioletApi } from "@/api/violet";
 import { Config } from "@/config";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faGear } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faGear,
+  faRotateRight,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const app = createApp(App);
@@ -19,7 +24,7 @@ const config = new Config();
 app.provide("violetApi", new VioletApi(config));
 app.provide("config", config);
 
-library.add(faGear);
+library.add(faGear, faEdit, faTrashCan, faRotateRight);
 app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.mount("#app");

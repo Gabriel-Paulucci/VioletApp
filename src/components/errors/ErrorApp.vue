@@ -3,7 +3,7 @@
     <span class="grow"> {{ name }} </span>
     <div>
       <font-awesome-icon
-        class="text-xs invisible group-hover:visible cursor-pointer"
+        class="text-sm invisible group-hover:visible hover:text-cyan-500 cursor-pointer"
         :icon="['fa', 'gear']"
         @click="$emit('edit', id)"
       />
@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 defineProps<{
   id: number;
   name: string;

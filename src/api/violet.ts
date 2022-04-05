@@ -1,13 +1,20 @@
 import { Config } from "@/config";
 
 export interface App {
-  id: string;
+  id: number;
   name: string;
   owner: string;
 }
 
 export interface Token {
   token: string;
+}
+
+export interface AppToken {
+  token: string;
+  appId: number;
+  permitCors: boolean;
+  subappName: string | null;
 }
 
 export class VioletApi {
@@ -148,6 +155,47 @@ export class VioletApi {
     } catch (error) {
       console.log(error);
       throw new Error("Failed to get apps");
+    }
+  }
+
+  public async getAppTokens(appId: number) {
+    try {
+      const request = await fetch(`${this.baseUrl}/apps/${appId}/tokens`, {
+        ...this.baseConfig,
+        method: "GET",
+      });
+
+      switch (request.status) {
+        case 200: {
+          interface Response {
+            app_id: number;
+            token: string;
+            permit_cors: boolean;
+            subapp_name: string | null;
+          }
+
+          const response: Response[] = await request.json();
+
+          return response.map<AppToken>((token) => ({
+            appId: token.app_id,
+            permitCors: token.permit_cors,
+            subappName: token.subapp_name,
+            token: token.token,
+          }));
+        }
+        case 404: {
+          throw new Error("App not found");
+        }
+        case 500: {
+          throw new Error("Internal server error");
+        }
+        default:
+          console.log(request.status);
+          throw new Error("Unknown error");
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to get app tokens");
     }
   }
 }
