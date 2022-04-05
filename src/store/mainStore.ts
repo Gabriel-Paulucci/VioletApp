@@ -6,7 +6,7 @@ export interface MainStore {
 }
 
 export interface App {
-  id: string;
+  id: number;
   name: string;
   owner: string;
 }
