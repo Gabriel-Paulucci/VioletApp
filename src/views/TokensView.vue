@@ -3,7 +3,7 @@
     <div class="w-[200px] bg-emerald-700">
       <DashboardMenu :apps="apps" />
     </div>
-    <div class="grow bg-teal-50">
+    <div class="grow bg-teal-50 overflow-y-scroll">
       <DashboardContainer>
         <ErrorToken :tokens="appTokens" @new="newAppToken" />
       </DashboardContainer>
