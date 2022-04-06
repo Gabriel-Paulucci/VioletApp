@@ -10,7 +10,7 @@
     </div>
     <div class="grow">
       <div class="h-px w-[90%] bg-emerald-50 mx-auto my-3"></div>
-      <ErrorApp
+      <AppItem
         v-for="app in apps"
         :key="app.id"
         class="mx-7 text-sky-300"
@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { App } from "@/api/violet";
-import ErrorApp from "../app/AppItem.vue";
+import AppItem from "../app/AppItem.vue";
 
 defineProps<{
   apps: App[];

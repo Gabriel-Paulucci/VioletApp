@@ -1,4 +1,5 @@
 import { Config } from "@/config";
+import { DateTime } from "luxon";
 
 export interface App {
   id: number;
@@ -16,6 +17,16 @@ export interface AppToken {
   permitCors: boolean;
   subappName: string | null;
   newToken: boolean;
+}
+
+export interface AppError {
+  id: number;
+  appId: number;
+  errorLevel: string;
+  message: string;
+  stackTrace: string | null;
+  createdAt: DateTime;
+  subappName: string | null;
 }
 
 export class VioletApi {
@@ -246,6 +257,53 @@ export class VioletApi {
     } catch (error) {
       console.log(error);
       throw new Error("Failed to create app token");
+    }
+  }
+
+  public async getAppErrors(appId: number): Promise<AppError[]> {
+    try {
+      const request = await fetch(`${this.baseUrl}/apps/${appId}/errors`, {
+        ...this.baseConfig,
+        method: "GET",
+      });
+
+      switch (request.status) {
+        case 200: {
+          interface Response {
+            id: number;
+            app_id: number;
+            error_level: string;
+            message: string;
+            stack_trace: string | null;
+            created_at: number;
+            subapp_name: string | null;
+          }
+
+          const response: Response[] = await request.json();
+
+          return response.map<AppError>((error) => ({
+            appId: error.app_id,
+            createdAt: DateTime.fromSeconds(error.created_at),
+            errorLevel: error.error_level,
+            stackTrace: error.stack_trace,
+            subappName: error.subapp_name,
+            id: error.id,
+            message: error.message,
+          }));
+        }
+        case 404: {
+          throw new Error("App not found");
+        }
+        case 500: {
+          throw new Error("Internal server error");
+        }
+        default:
+          console.log(request.status);
+          throw new Error("Unknown error");
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to get app errors");
     }
   }
 }

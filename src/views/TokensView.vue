@@ -5,7 +5,7 @@
     </div>
     <div class="grow bg-teal-50 overflow-y-scroll">
       <DashboardContainer>
-        <ErrorToken :tokens="appTokens" @new="newAppToken" />
+        <TokenList :tokens="appTokens" @new="newAppToken" />
       </DashboardContainer>
     </div>
   </div>
@@ -17,14 +17,14 @@ import DashboardMenu from "@/components/dashboard/DashboardMenu.vue";
 import DashboardContainer from "@/components/dashboard/DashboardContainer.vue";
 import { useMainStore } from "@/store/mainStore";
 import { inject, onMounted, ref, watch } from "vue";
-import ErrorToken from "@/components/app/TokenList.vue";
+import TokenList from "@/components/app/TokenList.vue";
 import { useRoute } from "vue-router";
 
 const violetApi = inject<VioletApi>("violetApi");
 const apps = ref<App[]>([]);
 const appTokens = ref<AppToken[]>([]);
 const store = useMainStore();
-const router = useRoute();
+const route = useRoute();
 
 async function newAppToken(name: string, cors: boolean) {
   if (!violetApi) {
@@ -34,7 +34,7 @@ async function newAppToken(name: string, cors: boolean) {
 
   try {
     const res = await violetApi.createAppToken(
-      Number(router.params.id),
+      Number(route.params.id),
       name,
       cors
     );
@@ -59,7 +59,7 @@ async function fetchAppTokens(id: number) {
 }
 
 watch(
-  () => router.params.id,
+  () => route.params.id,
   async (id) => {
     const newId = Number(id);
 
@@ -89,7 +89,7 @@ onMounted(async () => {
     apps.value = store.apps;
   }
 
-  const newId = Number(router.params.id);
+  const newId = Number(route.params.id);
 
   if (isNaN(newId)) {
     return;
