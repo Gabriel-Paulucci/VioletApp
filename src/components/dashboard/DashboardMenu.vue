@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { App } from "@/api/violet";
-import ErrorApp from "../errors/ErrorApp.vue";
+import ErrorApp from "../app/ErrorApp.vue";
 
 defineProps<{
   apps: App[];

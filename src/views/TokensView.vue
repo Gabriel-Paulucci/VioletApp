@@ -5,7 +5,7 @@
     </div>
     <div class="grow bg-teal-50">
       <DashboardContainer>
-        <ErrorToken :tokens="appTokens" />
+        <ErrorToken :tokens="appTokens" @new="newAppToken" />
       </DashboardContainer>
     </div>
   </div>
@@ -17,7 +17,7 @@ import DashboardMenu from "@/components/dashboard/DashboardMenu.vue";
 import DashboardContainer from "@/components/dashboard/DashboardContainer.vue";
 import { useMainStore } from "@/store/mainStore";
 import { inject, onMounted, ref, watch } from "vue";
-import ErrorToken from "@/components/errors/ErrorToken.vue";
+import ErrorToken from "@/components/app/TokenList.vue";
 import { useRoute } from "vue-router";
 
 const violetApi = inject<VioletApi>("violetApi");
@@ -25,6 +25,24 @@ const apps = ref<App[]>([]);
 const appTokens = ref<AppToken[]>([]);
 const store = useMainStore();
 const router = useRoute();
+
+async function newAppToken(name: string, cors: boolean) {
+  if (!violetApi) {
+    console.log("VioletApi not found");
+    return;
+  }
+
+  try {
+    const res = await violetApi.createAppToken(
+      Number(router.params.id),
+      name,
+      cors
+    );
+    appTokens.value.push(res);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 async function fetchAppTokens(id: number) {
   if (!violetApi) {

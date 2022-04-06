@@ -12,7 +12,17 @@
         <tr class="border-b-[1px]" v-for="token in tokens" :key="token.token">
           <td>{{ token.appId }}</td>
           <td>{{ token.subappName }}</td>
-          <td>{{ token.token }}</td>
+          <td class="flex items-center" v-if="token.new">
+            <div class="grow">
+              {{ `${token.token.substring(0, 5)}...` }}
+            </div>
+            <font-awesome-icon
+              class="text-sky-300 hover:text-sky-500 mx-1 cursor-pointer"
+              :icon="['fa', 'copy']"
+              @click="copy(token.token)"
+            />
+          </td>
+          <td v-else>{{ token.token }}</td>
           <td class="text-center">{{ token.permitCors }}</td>
           <td class="text-center">
             <font-awesome-icon
@@ -35,7 +45,10 @@
         <tr class="border-b-[1px]">
           <td></td>
           <td>
-            <div class="px-4 rounded-lg bg-teal-100">
+            <div
+              class="px-4 rounded-lg"
+              :class="{ 'bg-teal-100': !error, 'bg-red-100': error }"
+            >
               <input
                 class="w-full bg-transparent"
                 type="text"
@@ -52,7 +65,7 @@
             <font-awesome-icon
               :icon="['fa', 'plus']"
               class="text-green-300 hover:text-green-500 mx-1 cursor-pointer"
-              @click="$emit('new')"
+              @click="newToken"
             />
           </td>
         </tr>
@@ -65,16 +78,32 @@
 import { AppToken } from "@/api/violet";
 import { ref } from "vue";
 
-const name = ref("");
-const cors = ref(false);
-
 defineProps<{
   tokens: AppToken[];
 }>();
-defineEmits<{
+const emit = defineEmits<{
   (event: "config", id: number): void;
   (event: "delete", id: number): void;
   (event: "regen", id: number): void;
-  (event: "new"): void;
+  (event: "new", name: string, cors: boolean): void;
 }>();
+
+const name = ref("");
+const cors = ref(false);
+const error = ref(false);
+
+function newToken() {
+  if (name.value.length > 255) {
+    error.value = true;
+    return;
+  }
+  emit("new", name.value, cors.value);
+  error.value = false;
+  name.value = "";
+  cors.value = false;
+}
+
+function copy(text: string) {
+  navigator.clipboard.writeText(text);
+}
 </script>

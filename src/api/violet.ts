@@ -15,6 +15,7 @@ export interface AppToken {
   appId: number;
   permitCors: boolean;
   subappName: string | null;
+  new: boolean;
 }
 
 export class VioletApi {
@@ -37,7 +38,10 @@ export class VioletApi {
     };
   }
 
-  public async login(username: string, password: string) {
+  public async login(
+    username: string,
+    password: string
+  ): Promise<Token | undefined> {
     try {
       const request = await fetch(`${this.baseUrl}/auth/login`, {
         ...this.baseConfig,
@@ -72,7 +76,7 @@ export class VioletApi {
     username: string,
     password: string,
     repeatPassword: string
-  ) {
+  ): Promise<boolean> {
     try {
       const request = await fetch(`${this.baseUrl}/auth/singup`, {
         ...this.baseConfig,
@@ -104,7 +108,7 @@ export class VioletApi {
     }
   }
 
-  public async newApp(name: string) {
+  public async newApp(name: string): Promise<App | undefined> {
     try {
       const request = await fetch(`${this.baseUrl}/apps`, {
         ...this.baseConfig,
@@ -133,7 +137,7 @@ export class VioletApi {
     }
   }
 
-  public async getApps() {
+  public async getApps(): Promise<App[]> {
     try {
       const request = await fetch(`${this.baseUrl}/apps`, {
         ...this.baseConfig,
@@ -158,7 +162,7 @@ export class VioletApi {
     }
   }
 
-  public async getAppTokens(appId: number) {
+  public async getAppTokens(appId: number): Promise<AppToken[]> {
     try {
       const request = await fetch(`${this.baseUrl}/apps/${appId}/tokens`, {
         ...this.baseConfig,
@@ -181,6 +185,7 @@ export class VioletApi {
             permitCors: token.permit_cors,
             subappName: token.subapp_name,
             token: token.token,
+            new: false,
           }));
         }
         case 404: {
@@ -196,6 +201,51 @@ export class VioletApi {
     } catch (error) {
       console.log(error);
       throw new Error("Failed to get app tokens");
+    }
+  }
+
+  public async createAppToken(
+    appId: number,
+    name: string,
+    cors: boolean
+  ): Promise<AppToken> {
+    try {
+      const request = await fetch(`${this.baseUrl}/apps/${appId}/tokens`, {
+        ...this.baseConfig,
+        body: JSON.stringify({ subapp_name: name, permit_cors: cors }),
+        method: "POST",
+      });
+
+      switch (request.status) {
+        case 201: {
+          interface Response {
+            app_id: number;
+            token: string;
+            permit_cors: boolean;
+            subapp_name: string | null;
+          }
+          const response: Response = await request.json();
+          return {
+            appId: response.app_id,
+            permitCors: response.permit_cors,
+            subappName: response.subapp_name,
+            token: response.token,
+            new: true,
+          };
+        }
+        case 401: {
+          throw new Error("Unauthorized");
+        }
+        case 500: {
+          throw new Error("Internal server error");
+        }
+        default:
+          console.log(request.status);
+          throw new Error("Unknown error");
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to create app token");
     }
   }
 }
