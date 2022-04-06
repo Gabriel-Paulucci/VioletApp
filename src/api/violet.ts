@@ -15,7 +15,7 @@ export interface AppToken {
   appId: number;
   permitCors: boolean;
   subappName: string | null;
-  new: boolean;
+  newToken: boolean;
 }
 
 export class VioletApi {
@@ -185,7 +185,7 @@ export class VioletApi {
             permitCors: token.permit_cors,
             subappName: token.subapp_name,
             token: token.token,
-            new: false,
+            newToken: false,
           }));
         }
         case 404: {
@@ -230,7 +230,7 @@ export class VioletApi {
             permitCors: response.permit_cors,
             subappName: response.subapp_name,
             token: response.token,
-            new: true,
+            newToken: true,
           };
         }
         case 401: {
