@@ -28,6 +28,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "tokens" */ "../views/TokensView.vue"),
   },
+  {
+    path: "/erros/:id",
+    name: "erros",
+    component: () =>
+      import(/* webpackChunkName: "erros" */ "../views/ErrosView.vue"),
+  },
 ];
 
 const router = createRouter({
