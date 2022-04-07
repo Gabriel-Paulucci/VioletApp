@@ -7,7 +7,7 @@
     <td>{{ message }}</td>
     <td v-if="stackTrace">{{ stackTrace }}</td>
     <td v-else>[NULL]</td>
-    <td>{{ createdAt.toFormat("dd/mm/yyyy HH:mm") }}</td>
+    <td>{{ createdAt.toFormat("dd/MM/yyyy HH:mm") }}</td>
   </tr>
 </template>
 

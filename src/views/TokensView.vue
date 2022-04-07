@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen w-screen flex flex-row">
     <div class="w-[200px] bg-emerald-700">
-      <DashboardMenu :apps="apps" />
+      <DashboardMenu :apps="apps" @app-added="(app) => apps.push(app)" />
     </div>
     <div class="grow bg-teal-50 overflow-y-scroll">
       <DashboardContainer>

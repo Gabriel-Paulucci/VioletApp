@@ -119,7 +119,7 @@ export class VioletApi {
     }
   }
 
-  public async newApp(name: string): Promise<App | undefined> {
+  public async newApp(name: string): Promise<App> {
     try {
       const request = await fetch(`${this.baseUrl}/apps`, {
         ...this.baseConfig,
@@ -128,12 +128,12 @@ export class VioletApi {
       });
 
       switch (request.status) {
-        case 200: {
+        case 201: {
           const response: App = await request.json();
           return response;
         }
         case 422: {
-          return;
+          throw new Error("Invalid app name");
         }
         case 500: {
           throw new Error("Internal server error");
