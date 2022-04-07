@@ -1,13 +1,13 @@
 <template>
   <tr class="border-b-[1px]">
-    <td>{{ id }}</td>
-    <td>{{ errorLevel }}</td>
+    <td class="text-center">{{ id }}</td>
+    <td class="text-center" v-if="subappName">{{ subappName }}</td>
+    <td class="text-center" v-else>[NULL]</td>
+    <td class="text-center">{{ errorLevel }}</td>
     <td>{{ message }}</td>
     <td v-if="stackTrace">{{ stackTrace }}</td>
     <td v-else>[NULL]</td>
     <td>{{ createdAt.toFormat("dd/mm/yyyy HH:mm") }}</td>
-    <td v-if="subappName">{{ subappName }}</td>
-    <td v-else>[NULL]</td>
   </tr>
 </template>
 
